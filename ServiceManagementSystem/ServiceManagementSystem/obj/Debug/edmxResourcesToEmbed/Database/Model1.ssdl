@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ServiceManagmentSystemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Asset">
+    <Key>
+      <PropertyRef Name="AssetId" />
+    </Key>
+    <Property Name="AssetId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AssestName" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="AssetLocationId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="AssetLocation">
+    <Key>
+      <PropertyRef Name="AssetLocationId" />
+    </Key>
+    <Property Name="AssetLocationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LocationName" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="AssetLocationDescription" Type="varchar" MaxLength="500" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Department">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+    </Key>
+    <Property Name="DepartmentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DepartmentName" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Request">
+    <Key>
+      <PropertyRef Name="RequestId" />
+    </Key>
+    <Property Name="RequestId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DepartmentId" Type="int" />
+    <Property Name="RequestDescription" Type="varchar" MaxLength="500" />
+    <Property Name="RequestStatusId" Type="int" />
+  </EntityType>
+  <EntityType Name="RequestStatus">
+    <Key>
+      <PropertyRef Name="RequestStatusId" />
+    </Key>
+    <Property Name="RequestStatusId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestStatusName" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RequestTracking">
+    <Key>
+      <PropertyRef Name="RequestTrackingId" />
+    </Key>
+    <Property Name="RequestTrackingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RequestStatusId" Type="int" />
+    <Property Name="UserId" Type="int" />
+  </EntityType>
+  <EntityType Name="Role">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="varchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RoleUserMapping">
+    <Key>
+      <PropertyRef Name="RoleUserMappingId" />
+    </Key>
+    <Property Name="RoleUserMappingId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Asset_AssetLocation">
+    <End Role="AssetLocation" Type="Self.AssetLocation" Multiplicity="1" />
+    <End Role="Asset" Type="Self.Asset" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="AssetLocation">
+        <PropertyRef Name="AssetLocationId" />
+      </Principal>
+      <Dependent Role="Asset">
+        <PropertyRef Name="AssetLocationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Request_Department">
+    <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+    <End Role="Request" Type="Self.Request" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Department">
+        <PropertyRef Name="DepartmentId" />
+      </Principal>
+      <Dependent Role="Request">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Request_Request">
+    <End Role="RequestStatus" Type="Self.RequestStatus" Multiplicity="0..1" />
+    <End Role="Request" Type="Self.Request" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatus">
+        <PropertyRef Name="RequestStatusId" />
+      </Principal>
+      <Dependent Role="Request">
+        <PropertyRef Name="RequestStatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RequestTracking_RequestStatus">
+    <End Role="RequestStatus" Type="Self.RequestStatus" Multiplicity="0..1" />
+    <End Role="RequestTracking" Type="Self.RequestTracking" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="RequestStatus">
+        <PropertyRef Name="RequestStatusId" />
+      </Principal>
+      <Dependent Role="RequestTracking">
+        <PropertyRef Name="RequestStatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_RoleUserMapping_Role">
+    <End Role="Role" Type="Self.Role" Multiplicity="1" />
+    <End Role="RoleUserMapping" Type="Self.RoleUserMapping" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Role">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="RoleUserMapping">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ServiceManagmentSystemModelStoreContainer">
+    <EntitySet Name="Asset" EntityType="Self.Asset" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="AssetLocation" EntityType="Self.AssetLocation" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Request" EntityType="Self.Request" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RequestStatus" EntityType="Self.RequestStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RequestTracking" EntityType="Self.RequestTracking" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Role" EntityType="Self.Role" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RoleUserMapping" EntityType="Self.RoleUserMapping" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Asset_AssetLocation" Association="Self.FK_Asset_AssetLocation">
+      <End Role="AssetLocation" EntitySet="AssetLocation" />
+      <End Role="Asset" EntitySet="Asset" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Request_Department" Association="Self.FK_Request_Department">
+      <End Role="Department" EntitySet="Department" />
+      <End Role="Request" EntitySet="Request" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Request_Request" Association="Self.FK_Request_Request">
+      <End Role="RequestStatus" EntitySet="RequestStatus" />
+      <End Role="Request" EntitySet="Request" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RequestTracking_RequestStatus" Association="Self.FK_RequestTracking_RequestStatus">
+      <End Role="RequestStatus" EntitySet="RequestStatus" />
+      <End Role="RequestTracking" EntitySet="RequestTracking" />
+    </AssociationSet>
+    <AssociationSet Name="FK_RoleUserMapping_Role" Association="Self.FK_RoleUserMapping_Role">
+      <End Role="Role" EntitySet="Role" />
+      <End Role="RoleUserMapping" EntitySet="RoleUserMapping" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
